@@ -1,0 +1,41 @@
+{
+    "name": "monkeyscloud/monkeyslegion-encryption",
+    "description": "Standalone encryption for MonkeysLegion v2 — AES-GCM, XChaCha20, HMAC, key rotation, envelope encryption, PHP 8.4 hooks",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "MonkeysCloud Team",
+            "email": "dev@monkeys.cloud"
+        }
+    ],
+    "require": {
+        "php": "^8.4",
+        "ext-openssl": "*",
+        "ext-sodium": "*",
+        "ext-mbstring": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "MonkeysLegion\\Encryption\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MonkeysLegion\\Encryption\\Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^11.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.0-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable"
+}

@@ -1,0 +1,18 @@
+encryption {
+    cipher        = ${ENCRYPTION_CIPHER:-aes-256-gcm}
+    key           = ${ENCRYPTION_KEY}
+    previous_keys = ${ENCRYPTION_PREVIOUS_KEYS:-}
+
+    hash {
+        algorithm = ${HASH_ALGO:-argon2id}
+        bcrypt_rounds = ${BCRYPT_ROUNDS:-12}
+        argon_memory  = ${ARGON_MEMORY:-65536}
+        argon_threads = ${ARGON_THREADS:-4}
+        argon_time    = ${ARGON_TIME:-4}
+    }
+
+    hmac {
+        algorithm = ${HMAC_ALGO:-sha256}
+        key       = ${HMAC_KEY:-}
+    }
+}
