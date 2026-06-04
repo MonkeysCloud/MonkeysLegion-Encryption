@@ -11,8 +11,10 @@ declare(strict_types=1);
 
 namespace MonkeysLegion\Encryption\Cli\Command;
 
+use MonkeysLegion\Cli\Console\Attributes\Command as CommandAttr;
+use MonkeysLegion\Cli\Console\Command;
+use MonkeysLegion\Cli\Command\MakerHelpers;
 use MonkeysLegion\Encryption\Enum\Cipher;
-use MonkeysLegion\Encryption\Key\Key;
 use MonkeysLegion\Encryption\Key\KeyGenerator;
 
 /**
@@ -20,7 +22,8 @@ use MonkeysLegion\Encryption\Key\KeyGenerator;
  *
  * Generate a new encryption key and display rotation instructions.
  */
-final class RotateKeyCommand
+#[CommandAttr('encryption:rotate-key', 'Generate a new key and show rotation steps')]
+final class RotateKeyCommand extends Command
 {
     public const string NAME = 'encryption:rotate-key';
     public const string DESCRIPTION = 'Generate a new key and show rotation steps';
@@ -28,13 +31,15 @@ final class RotateKeyCommand
     /**
      * Execute the command.
      *
-     * @param array<string, string> $options
-     *
-     * @return array{new_key: string, instructions: string}
      */
-    public function execute(array $options = []): array
+    public function handle(): int
     {
-        $cipherValue = $options['cipher'] ?? 'aes-256-gcm';
+        $help = $this->option('help', false);
+        if ($help) {
+            $this->line(self::help());
+            return 0;
+        }
+        $cipherValue = $this->option('cipher', 'aes-256-gcm');
         $cipher = Cipher::from($cipherValue);
 
         $newKey = KeyGenerator::generateBase64($cipher);
@@ -55,10 +60,10 @@ final class RotateKeyCommand
         Cipher:  {$cipher->label()}
         INSTRUCTIONS;
 
-        return [
-            'new_key'      => $newKey,
-            'instructions' => $instructions,
-        ];
+        $this->printColored("New Encryption Key Generated!", 'green');
+        $this->line($instructions);
+
+        return 0;
     }
 
     /**

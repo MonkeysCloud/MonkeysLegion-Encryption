@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace MonkeysLegion\Encryption\Cli\Command;
 
+use MonkeysLegion\Cli\Console\Attributes\Command as CommandAttr;
+use MonkeysLegion\Cli\Console\Command;
+use MonkeysLegion\Cli\Command\MakerHelpers;
 use MonkeysLegion\Encryption\Enum\Cipher;
 use MonkeysLegion\Encryption\Key\KeyGenerator;
 
@@ -19,33 +22,41 @@ use MonkeysLegion\Encryption\Key\KeyGenerator;
  *
  * Generate a cryptographically secure encryption key.
  */
-final class GenerateKeyCommand
+#[CommandAttr('encryption:generate-key', 'Generate a new encryption key')]
+final class GenerateKeyCommand extends Command
 {
+    use MakerHelpers;
+
     public const string NAME = 'encryption:generate-key';
     public const string DESCRIPTION = 'Generate a new encryption key';
 
-    /**
-     * Execute the command.
-     *
-     * @param array<string, string> $options
-     */
-    public function execute(array $options = []): string
+    public function handle(): int
     {
-        $cipherValue = $options['cipher'] ?? 'aes-256-gcm';
+        $help = $this->option('help', false);
+        if ($help) {
+            $this->line(self::help());
+            return 0;
+        }
+        $cipherValue = $this->option('cipher', 'aes-256-gcm');
         $cipher = Cipher::from($cipherValue);
-        $format = $options['format'] ?? 'base64';
+        $format = $this->option('format', 'base64');
 
-        return match ($format) {
+        $key = match ($format) {
             'hex'    => KeyGenerator::generateHex($cipher),
             'raw'    => KeyGenerator::generateRaw($cipher),
             default  => KeyGenerator::generateBase64($cipher),
         };
+
+        $this->printColored("Generated Key: ", 'green');
+        $this->line($key);
+
+        return 0;
     }
 
     /**
      * Get usage help text.
      */
-    public static function help(): string
+    private static function help(): string
     {
         return <<<HELP
         Usage: encryption:generate-key [options]

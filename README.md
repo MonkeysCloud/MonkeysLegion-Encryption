@@ -371,12 +371,12 @@ $hasher->verify('password', $hash);       // true
 
 ```bash
 # Generate a new key
-php artisan encryption:generate-key
-php artisan encryption:generate-key --cipher=xchacha20-poly1305
-php artisan encryption:generate-key --format=hex
+php ml encryption:generate-key
+php ml encryption:generate-key --cipher=xchacha20-poly1305
+php ml encryption:generate-key --format=hex
 
 # Rotate key (with instructions)
-php artisan encryption:rotate-key
+php ml encryption:rotate-key
 ```
 
 ---
